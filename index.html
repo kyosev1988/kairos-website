@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kairos Next — The Opportune Moment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #04060f;
+    --blue-glow: #2a6ef5;
+    --blue-soft: #4d8fff;
+    --blue-dim: rgba(42, 110, 245, 0.15);
+    --orange: #d4651a;
+    --white: #f0eff0;
+    --grey: #7a7e8c;
+    --grey-light: #a8acbb;
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--blue-glow); border-radius: 2px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    background: linear-gradient(to bottom, rgba(4,6,15,0.9) 0%, transparent 100%);
+    backdrop-filter: blur(0px);
+    transition: backdrop-filter 0.4s, background 0.4s;
+  }
+  nav.scrolled {
+    backdrop-filter: blur(20px);
+    background: rgba(4,6,15,0.7);
+    border-bottom: 1px solid rgba(42,110,245,0.08);
+  }
+
+  .nav-logo {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-decoration: none;
+    opacity: 0.9;
+  }
+  .nav-logo span { color: var(--blue-soft); }
+
+  .nav-btn {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 24px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .nav-btn:hover {
+    border-color: var(--blue-soft);
+    color: var(--blue-soft);
+    box-shadow: 0 0 20px rgba(42,110,245,0.2);
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero-video-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-video-wrap video {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.35;
+    filter: saturate(0.6) brightness(0.5);
+  }
+  /* Fallback gradient if no video */
+  .hero-video-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, rgba(15,25,70,0.8) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 30% 60%, rgba(42,110,245,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 70% 30%, rgba(12,18,55,0.9) 0%, transparent 60%);
+    z-index: 1;
+  }
+
+  /* Animated star field */
+  .stars {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: white;
+    animation: twinkle var(--dur, 4s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: var(--peak, 0.6); }
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 50% 50%, transparent 30%, rgba(4,6,15,0.6) 100%),
+      linear-gradient(to bottom, rgba(4,6,15,0.2) 0%, transparent 30%, transparent 60%, rgba(4,6,15,0.9) 100%);
+    z-index: 3;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(42,110,245,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 3;
+    animation: pulse-glow 6s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 4;
+    max-width: 780px;
+    padding: 0 32px;
+  }
+
+  .hero-prelude {
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 3.5vw, 36px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.65;
+    color: rgba(240,239,240,0.75);
+    margin-bottom: 48px;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.3s both;
+  }
+
+  .hero-tagline {
+    font-family: var(--font-sans);
+    font-size: clamp(11px, 1.2vw, 13px);
+    font-weight: 200;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--blue-soft);
+    margin-bottom: 20px;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.6s both;
+  }
+
+  .hero-name {
+    font-family: var(--font-serif);
+    font-size: clamp(48px, 7vw, 88px);
+    font-weight: 300;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 12px;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.75s both;
+  }
+
+  .hero-sub {
+    font-family: var(--font-serif);
+    font-size: clamp(13px, 1.5vw, 17px);
+    font-weight: 300;
+    font-style: italic;
+    letter-spacing: 0.15em;
+    color: var(--grey);
+    margin-bottom: 52px;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 0.9s both;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid rgba(42,110,245,0.5);
+    padding: 16px 48px;
+    border-radius: 2px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.4s;
+    animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 1.1s both;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(42,110,245,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .hero-cta:hover {
+    border-color: var(--blue-soft);
+    box-shadow: 0 0 40px rgba(42,110,245,0.3), inset 0 0 20px rgba(42,110,245,0.05);
+    color: var(--blue-soft);
+  }
+  .hero-cta:hover::before { opacity: 1; }
+
+  .hero-scroll-hint {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.35;
+    animation: fadeUp 1s ease 2s both;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--white));
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+  @keyframes scroll-pulse {
+    0%, 100% { transform: scaleY(1); opacity: 0.5; }
+    50% { transform: scaleY(1.3); opacity: 1; }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── DIVIDER ─── */
+  .section-divider {
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, rgba(42,110,245,0.3), transparent);
+    margin: 0 auto;
+  }
+
+  /* ─── SECTIONS SHARED ─── */
+  section {
+    padding: 120px 32px;
+  }
+
+  .section-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ─── SECTION 2: CONCEPT ─── */
+  #concept {
+    text-align: center;
+  }
+
+  .concept-eye {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(42,110,245,0.4), transparent);
+    margin: 0 auto 60px;
+  }
+
+  .concept-text-a {
+    font-family: var(--font-serif);
+    font-size: clamp(20px, 3vw, 32px);
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.8;
+    color: rgba(240,239,240,0.5);
+    margin-bottom: 48px;
+  }
+
+  .concept-text-b {
+    font-family: var(--font-serif);
+    font-size: clamp(22px, 3.5vw, 40px);
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--white);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+  .concept-text-b em {
+    font-style: italic;
+    color: var(--blue-soft);
+  }
+
+  /* ─── VIDEO SECTION ─── */
+  #film {
+    padding: 80px 32px 100px;
+  }
+
+  .film-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .film-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  .film-player {
+    position: relative;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+    border: 1px solid rgba(42,110,245,0.1);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    cursor: pointer;
+  }
+
+  .film-player video {
+    width: 100%;
+    display: block;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+
+  /* Play overlay */
+  .film-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: rgba(4,6,15,0.5);
+    transition: opacity 0.4s;
+    z-index: 2;
+  }
+  .film-overlay.hidden { opacity: 0; pointer-events: none; }
+
+  .play-btn {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(10px);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    padding-left: 4px;
+  }
+  .film-overlay:hover .play-btn {
+    border-color: var(--blue-soft);
+    background: rgba(42,110,245,0.12);
+    box-shadow: 0 0 40px rgba(42,110,245,0.25);
+    transform: scale(1.05);
+  }
+
+  .film-overlay-text {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* Controls */
+  .film-controls {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: linear-gradient(to top, rgba(4,6,15,0.9) 0%, transparent 100%);
+    z-index: 3;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .film-player:hover .film-controls,
+  .film-player.playing .film-controls { opacity: 1; }
+
+  .ctrl-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ctrl-btn:hover { opacity: 1; }
+
+  .ctrl-progress {
+    flex: 1;
+    padding: 8px 0;
+    cursor: pointer;
+  }
+  .ctrl-track {
+    height: 2px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 1px;
+    overflow: hidden;
+  }
+  .ctrl-fill {
+    height: 100%;
+    background: var(--blue-soft);
+    border-radius: 1px;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  .ctrl-time {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 200;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+    min-width: 32px;
+    text-align: right;
+  }
+
+  .sound-btn { margin-left: 4px; }
+
+  /* ─── SECTION 4: WAITLIST ─── */
+  #waitlist {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  #waitlist::before {
+    content: '';
+    position: absolute;
+    width: 800px; height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(42,110,245,0.04) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    pointer-events: none;
+  }
+
+  .waitlist-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--blue-soft);
+    margin-bottom: 24px;
+    opacity: 0.8;
+  }
+
+  .waitlist-title {
+    font-family: var(--font-serif);
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 300;
+    line-height: 1.3;
+    color: var(--white);
+    margin-bottom: 64px;
+  }
+  .waitlist-title em { font-style: italic; color: rgba(240,239,240,0.5); }
+
+  .waitlist-form {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+  }
+  .form-field label {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+  .form-field input,
+  .form-field select {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    padding: 14px 16px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--white);
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    -webkit-appearance: none;
+    width: 100%;
+  }
+  .form-field input::placeholder { color: rgba(255,255,255,0.2); }
+  .form-field input:focus,
+  .form-field select:focus {
+    border-color: rgba(42,110,245,0.4);
+    box-shadow: 0 0 20px rgba(42,110,245,0.08);
+    background: rgba(42,110,245,0.03);
+  }
+  .form-field select option { background: #0a0f28; color: var(--white); }
+
+  .radio-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .radio-option {
+    flex: 1;
+    min-width: 80px;
+    position: relative;
+  }
+  .radio-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0; height: 0;
+  }
+  .radio-option label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 2px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .radio-option input[type="radio"]:checked + label {
+    background: rgba(42,110,245,0.1);
+    border-color: rgba(42,110,245,0.4);
+    color: var(--blue-soft);
+  }
+
+  .form-submit {
+    margin-top: 16px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: transparent;
+    border: 1px solid rgba(42,110,245,0.4);
+    padding: 18px 48px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .form-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(42,110,245,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .form-submit:hover {
+    border-color: var(--blue-soft);
+    box-shadow: 0 0 40px rgba(42,110,245,0.25);
+    color: var(--blue-soft);
+  }
+  .form-submit:hover::before { opacity: 1; }
+  .form-submit:active { transform: scale(0.98); }
+
+  .form-note {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.2em;
+    color: var(--grey);
+    margin-top: 24px;
+    opacity: 0.6;
+  }
+
+  .success-msg {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 48px;
+  }
+  .success-msg.show { display: flex; }
+  .success-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1px solid rgba(42,110,245,0.4);
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(42,110,245,0.05);
+    box-shadow: 0 0 30px rgba(42,110,245,0.2);
+    font-size: 20px;
+  }
+  .success-msg p {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 300;
+    font-style: italic;
+    color: rgba(240,239,240,0.7);
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 48px 32px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  footer p {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 200;
+    letter-spacing: 0.2em;
+    color: var(--grey);
+    opacity: 0.4;
+  }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.35s; }
+  .reveal-delay-4 { transition-delay: 0.5s; }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-logo { font-size: 16px; }
+    section { padding: 80px 24px; }
+    .screens-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-content { padding: 0 24px; }
+  }
+
+  @media (max-width: 480px) {
+    .screens-grid { grid-template-columns: repeat(2, 1fr); }
+    .radio-group { gap: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="nav">
+  <a href="#hero" class="nav-logo">Kairos<span>·</span>Next</a>
+  <a href="#waitlist" class="nav-btn">Early Access</a>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-video-wrap"></div>
+
+  <div class="stars" id="stars"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <p class="hero-prelude">
+      Some conversations change everything.<br>
+      Most happen at the wrong time.
+    </p>
+    <p class="hero-tagline">Timing matters more than words</p>
+    <h1 class="hero-name">Kairos Next</h1>
+    <p class="hero-sub">The opportune moment.</p>
+    <a href="#waitlist" class="hero-cta">Request Early Access</a>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ─── CONCEPT ─── -->
+<section id="concept">
+  <div class="section-inner">
+    <div class="concept-eye"></div>
+    <p class="concept-text-a reveal">
+      We prepare what to say.<br>
+      We rarely choose when to say it.
+    </p>
+    <div class="section-divider" style="margin: 48px auto;"></div>
+    <p class="concept-text-b reveal reveal-delay-2">
+      Kairos Next helps you choose<br>
+      <em>the right moment.</em>
+    </p>
+  </div>
+</section>
+
+<!-- ─── VIDEO ─── -->
+<section id="film">
+  <div class="film-inner reveal">
+    <p class="film-label">KAIROS: THE OPPORTUNE MOMENT</p>
+    <div class="film-player" id="filmPlayer">
+      <!-- Replace video.mp4 with your actual video filename -->
+      <video id="filmVideo" preload="metadata" playsinline poster="">
+        <source src="video.mp4" type="video/mp4">
+      </video>
+      <!-- Play overlay -->
+      <div class="film-overlay" id="filmOverlay" onclick="togglePlay()">
+        <div class="play-btn" id="playBtn">
+          <svg width="22" height="26" viewBox="0 0 22 26" fill="none">
+            <path d="M2 2L20 13L2 24V2Z" fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <p class="film-overlay-text">Watch</p>
+      </div>
+      <!-- Controls bar -->
+      <div class="film-controls" id="filmControls">
+        <button class="ctrl-btn" onclick="togglePlay()" id="ctrlPlay" title="Play / Pause">
+          <svg id="iconPlay" width="14" height="16" viewBox="0 0 14 16" fill="none">
+            <path d="M1 1L13 8L1 15V1Z" fill="white"/>
+          </svg>
+          <svg id="iconPause" width="14" height="16" viewBox="0 0 14 16" fill="none" style="display:none">
+            <rect x="1" y="1" width="4" height="14" fill="white" rx="1"/>
+            <rect x="9" y="1" width="4" height="14" fill="white" rx="1"/>
+          </svg>
+        </button>
+        <div class="ctrl-progress" onclick="seekVideo(event)" id="progressBar">
+          <div class="ctrl-track">
+            <div class="ctrl-fill" id="progressFill"></div>
+          </div>
+        </div>
+        <span class="ctrl-time" id="ctrlTime">0:00</span>
+        <button class="ctrl-btn sound-btn" onclick="toggleSound()" id="soundBtn" title="Sound on / off">
+          <svg id="iconMute" width="16" height="14" viewBox="0 0 16 14" fill="none">
+            <path d="M1 4.5H4L8 1V13L4 9.5H1V4.5Z" fill="white"/>
+            <path d="M11 4C12.5 5 12.5 9 11 10" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+            <path d="M13 2C15.5 4 15.5 10 13 12" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <svg id="iconSound" width="16" height="14" viewBox="0 0 16 14" fill="none" style="display:none">
+            <path d="M1 4.5H4L8 1V13L4 9.5H1V4.5Z" fill="white"/>
+            <line x1="11" y1="4" x2="15" y2="10" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="15" y1="4" x2="11" y2="10" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button class="ctrl-btn" onclick="toggleFullscreen()" title="Fullscreen">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M1 5V1H5M9 1H13V5M13 9V13H9M5 13H1V9" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── WAITLIST ─── -->
+<section id="waitlist">
+  <div class="section-inner">
+    <p class="waitlist-eyebrow reveal">Private Pilot</p>
+    <h2 class="waitlist-title reveal reveal-delay-1">
+      The right conversation<br>
+      <em>at the right time.</em>
+    </h2>
+
+    <div class="waitlist-form reveal reveal-delay-2" id="waitlistForm">
+
+      <div class="form-field">
+        <label>Name</label>
+        <input type="text" placeholder="Your name" id="fname" autocomplete="name">
+      </div>
+
+      <div class="form-field">
+        <label>Email</label>
+        <input type="email" placeholder="your@email.com" id="femail" autocomplete="email">
+      </div>
+
+      <div class="form-field">
+        <label>Join As</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input type="radio" name="join" id="join-ind" value="Individual" checked>
+            <label for="join-ind">Individual</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" name="join" id="join-couple" value="Couple">
+            <label for="join-couple">Couple</label>
+          </div>
+        </div>
+      </div>
+
+      <button class="form-submit" onclick="handleSubmit()">Join Early Access</button>
+      <p class="form-note">Currently in private pilot.</p>
+    </div>
+
+    <div class="success-msg" id="successMsg">
+      <div class="success-icon">◎</div>
+      <p>You're in the right moment.</p>
+      <p style="font-size:13px; letter-spacing:0.15em; color:var(--grey); font-family:var(--font-sans); font-weight:200;">We'll be in touch.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>© 2025 Kairos Next &nbsp;·&nbsp; The opportune moment.</p>
+</footer>
+
+<script>
+  // ─── STARS ───
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() < 0.85 ? Math.random() * 1.5 + 0.5 : Math.random() * 2.5 + 1.5;
+    s.style.cssText = `
+      width:${size}px; height:${size}px;
+      top:${Math.random()*100}%; left:${Math.random()*100}%;
+      --dur:${Math.random()*5+3}s;
+      --delay:${Math.random()*8}s;
+      --peak:${Math.random()*0.5+0.2};
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // ─── NAV SCROLL ───
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ─── SCROLL REVEAL ───
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(r => obs.observe(r));
+
+  // ─── VIDEO PLAYER ───
+  const filmVideo = document.getElementById('filmVideo');
+  const filmOverlay = document.getElementById('filmOverlay');
+  const filmPlayer = document.getElementById('filmPlayer');
+  const progressFill = document.getElementById('progressFill');
+  const ctrlTime = document.getElementById('ctrlTime');
+  const iconPlay = document.getElementById('iconPlay');
+  const iconPause = document.getElementById('iconPause');
+  const iconMute = document.getElementById('iconMute');
+  const iconSound = document.getElementById('iconSound');
+
+  let isPlaying = false;
+  let isMuted = false; // sound ON by default when user hits play
+
+  function togglePlay() {
+    if (!filmVideo) return;
+    if (isPlaying) {
+      filmVideo.pause();
+      isPlaying = false;
+      filmPlayer.classList.remove('playing');
+      filmOverlay.classList.remove('hidden');
+      iconPlay.style.display = '';
+      iconPause.style.display = 'none';
+    } else {
+      filmVideo.muted = isMuted;
+      filmVideo.play();
+      isPlaying = true;
+      filmPlayer.classList.add('playing');
+      filmOverlay.classList.add('hidden');
+      iconPlay.style.display = 'none';
+      iconPause.style.display = '';
+    }
+  }
+
+  function toggleSound() {
+    if (!filmVideo) return;
+    isMuted = !isMuted;
+    filmVideo.muted = isMuted;
+    iconMute.style.display = isMuted ? 'none' : '';
+    iconSound.style.display = isMuted ? '' : 'none';
+  }
+
+  function seekVideo(e) {
+    if (!filmVideo || !filmVideo.duration) return;
+    const bar = document.getElementById('progressBar');
+    const rect = bar.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    filmVideo.currentTime = pct * filmVideo.duration;
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      filmPlayer.requestFullscreen && filmPlayer.requestFullscreen();
+    } else {
+      document.exitFullscreen && document.exitFullscreen();
+    }
+  }
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2,'0')}`;
+  }
+
+  if (filmVideo) {
+    filmVideo.addEventListener('timeupdate', () => {
+      if (!filmVideo.duration) return;
+      const pct = (filmVideo.currentTime / filmVideo.duration) * 100;
+      progressFill.style.width = pct + '%';
+      ctrlTime.textContent = formatTime(filmVideo.currentTime);
+    });
+    filmVideo.addEventListener('ended', () => {
+      isPlaying = false;
+      filmPlayer.classList.remove('playing');
+      filmOverlay.classList.remove('hidden');
+      iconPlay.style.display = '';
+      iconPause.style.display = 'none';
+    });
+  }
+
+  // ─── FORM → AIRTABLE ───
+  // After creating a new token at airtable.com/create/tokens
+  // replace YOUR_AIRTABLE_TOKEN_HERE below with your token
+  const AIRTABLE_TOKEN = 'insert token here';
+  const AIRTABLE_BASE  = 'appkLQkRCYCDMUDqi';
+  const AIRTABLE_TABLE = 'tbl3k7wxuLsuBFTEK';
+
+  async function handleSubmit() {
+    const name  = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const join  = document.querySelector('input[name="join"]:checked')?.value || 'Individual';
+
+    // Validate
+    if (!name) {
+      highlight('fname'); return;
+    }
+    if (!email || !email.includes('@')) {
+      highlight('femail'); return;
+    }
+
+    // Disable button while submitting
+    const btn = document.querySelector('.form-submit');
+    btn.textContent = 'Sending…';
+    btn.style.opacity = '0.5';
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_TABLE}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fields: {
+            'Name':    name,
+            'Email':   email,
+            'Join As': join,
+            'Date':    new Date().toISOString().split('T')[0]
+          }
+        })
+      });
+
+      if (res.ok) {
+        document.getElementById('waitlistForm').style.display = 'none';
+        document.getElementById('successMsg').classList.add('show');
+      } else {
+        const err = await res.json();
+        console.error('Airtable error:', err);
+        btn.textContent = 'Try again';
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      }
+    } catch (e) {
+      console.error('Network error:', e);
+      btn.textContent = 'Try again';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+    }
+  }
+
+  function highlight(id) {
+    const el = document.getElementById(id);
+    el.style.borderColor = 'rgba(212,101,26,0.6)';
+    el.focus();
+    setTimeout(() => el.style.borderColor = '', 2000);
+  }
+</script>
+</body>
+</html>
