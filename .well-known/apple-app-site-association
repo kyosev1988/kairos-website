@@ -1,0 +1,35 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "965MBM2956.com.kairosnext.kairosnext",
+        "paths": [
+          "/invite/*",
+          "/device-link/*"
+        ]
+      },
+      {
+        "appID": "965MBM2956.com.kairosnext.ios.dev",
+        "paths": [
+          "/invite/*",
+          "/device-link/*"
+        ]
+      },
+      {
+        "appID": "965MBM2956.com.kairosnext.ios.stage",
+        "paths": [
+          "/invite/*",
+          "/device-link/*"
+        ]
+      },
+      {
+        "appID": "965MBM2956.com.kairosnext.ios.local",
+        "paths": [
+          "/invite/*",
+          "/device-link/*"
+        ]
+      }
+    ]
+  }
+}
